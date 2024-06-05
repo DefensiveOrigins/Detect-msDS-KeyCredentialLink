@@ -1,13 +1,13 @@
 # Auditing and Detecting Changes to msDS-KeyCredentialLink (Shadow Credentials)
 
 ## Enable Auditing of changes to msDS-KeyCredentialLink
-Changes to the msds-KeyCredentialLink are not audited/logged with standard audit configurations. This required serious investigations and a partner firm in infosec provided us the answer: TrustedSec.
+Changes to the `msds-KeyCredentialLink` attribute are not audited/logged with standard audit configurations. This required serious investigations and a partner firm in infosec provided us the answer: TrustedSec.
 
 So, credit where it is due - this was amazing research: https://trustedsec.com/blog/a-hitch-hackers-guide-to-dacl-based-detections-part-1b. And, this should resolve the lack of auditing on the attribute used so commonly of late to escalate privileges.
 
 Another shout out is due here to the Open Threat Research Forge, Roberto Rodriguez and Jose Luis Rodriguez. Their efforts for open source are significant and they wrote the Set-AuditRule.ps1 tool used in the next commands. https://github.com/OTRF/Set-AuditRule
 
-To confiure Directory Service auditing of the msDS-CredentialLink attribute on all target objects in the domain, we must create a new AuditRule and specify the GUID of the attribute.  The msDS-CredentialLink Schema GUID that will be added to the Audit Rule can be found here: https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-ada2/45916e5b-d66f-444e-b1e5-5b0666ed4d66.
+To configure Directory Service auditing of the msDS-CredentialLink attribute on all target objects in the domain, we must create a new AuditRule and specify the GUID of the attribute.  The msDS-CredentialLink Schema GUID that will be added to the Audit Rule can be found here: https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-ada2/45916e5b-d66f-444e-b1e5-5b0666ed4d66.
 
 ```
 cn: ms-DS-Key-Credential-Link
@@ -26,7 +26,7 @@ cn: ms-DS-Key-Credential-Link
  showInAdvancedViewOnly: TRUE
  ```
 
- Now that we have the Schema GUID of the attribute, `5b47d60f-6090-40b2-9f37-2a4de88f3063` we can use Set-AuditRule.ps1 to add an Audit Rule at the top of our domain to all descendent objects in the domain.
+ Now that we have the Schema GUID of the attribute, `5b47d60f-6090-40b2-9f37-2a4de88f3063` we can use Set-AuditRule.ps1 to add an Audit Rule at the top of our domain to all descendant objects in the domain.
 
 ```
 Import-Module ActiveDirectory 
@@ -35,7 +35,7 @@ Import-Module .\Set-AuditRule.ps1
 Set-AuditRule -AdObjectPath 'AD:\DC=doazlab,DC=com' -WellKnownSidType WorldSid -Rights WriteProperty -InheritanceFlags All -AttributeGUID 5b47d60f-6090-40b2-9f37-2a4de88f3063 -AuditFlags Success
 ```
 
-After conifguring the Audit rule, future changes to objects' msDS-KeyCredentialLink will create audit event logs if Directory Service auditing is enabled on the Domain Controllers.  
+After configuring the Audit rule, future changes to objects' msDS-KeyCredentialLink will create audit event logs if Directory Service auditing is enabled on the Domain Controllers.  
 
 ## Kusto Detect
 
