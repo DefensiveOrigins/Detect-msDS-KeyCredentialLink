@@ -1,4 +1,4 @@
-# Auditing and Detecting Changes to msDS-KeyCredentialLink (Shadow Creds)
+# Auditing and Detecting Changes to msDS-KeyCredentialLink (Shadow Credentials)
 
 ## Enable Auditing of changes to msDS-KeyCredentialLink
 Changes to the msds-KeyCredentialLink are not audited/logged with standard audit configurations. This required serious investigations and a partner firm in infosec provided us the answer: TrustedSec.
@@ -26,7 +26,7 @@ cn: ms-DS-Key-Credential-Link
  showInAdvancedViewOnly: TRUE
  ```
 
- Now that we have the Scehma GUID of the attribute, we can use Set-AuditRule.ps1 to add an Audit Rule at the top of our domain to all descendent objects in the domain.
+ Now that we have the Schema GUID of the attribute, `5b47d60f-6090-40b2-9f37-2a4de88f3063` we can use Set-AuditRule.ps1 to add an Audit Rule at the top of our domain to all descendent objects in the domain.
 
 ```
 Import-Module ActiveDirectory 
