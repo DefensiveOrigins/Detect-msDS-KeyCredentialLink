@@ -32,7 +32,7 @@ cn: ms-DS-Key-Credential-Link
 Import-Module ActiveDirectory 
 iwr -Uri https://raw.githubusercontent.com/OTRF/Set-AuditRule/master/Set-AuditRule.ps1 -OutFile Set-AuditRule.ps1
 Import-Module .\Set-AuditRule.ps1
-Set-AuditRule -AdObjectPath 'AD:\DC=doazlab,DC=com' -WellKnownSidType WorldSid -Rights WriteProperty -InheritanceFlags All -AttributeGUID 5b47d60f-6090-40b2-9f37-2a4de88f3063 -AuditFlags Success
+Set-AuditRule -AdObjectPath 'AD:\DC=doazlab,DC=com' -WellKnownSidType WorldSid -Rights WriteProperty,GenericWrite -InheritanceFlags All -AttributeGUID 5b47d60f-6090-40b2-9f37-2a4de88f3063 -AuditFlags Success
 ```
 
 After configuring the Audit rule, future changes to objects' msDS-KeyCredentialLink will create audit event logs if Directory Service auditing is enabled on the Domain Controllers.  
